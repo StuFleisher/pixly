@@ -1,8 +1,10 @@
-from flask import Flask
-import s3fs
+from flask import Flask, request, jsonify
+# import s3fs
 import boto3
 from dotenv import load_dotenv
 import os
+
+app = Flask(__name__)
 
 load_dotenv()
 
@@ -17,4 +19,18 @@ s3= boto3.resource(
     aws_secret_access_key=SECRET_KEY
 )
 
-s3.Bucket(BUCKET).upload_file(Filename="test.txt", Key="test_file")
+s3.Bucket(BUCKET).upload_file(Filename="child.JPG", Key="child_file")
+
+##############################################################################
+
+@app.post('/add')
+def store_img():
+    print("Hello add route is being hit")
+    file = request.files["image"]
+    print(file)
+    s3.Bucket(BUCKET).upload_file(Filename=file, Key="TestImage")
+    return jsonify({"success": True})
+
+
+
+
