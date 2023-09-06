@@ -4,11 +4,17 @@ from flask_cors import CORS
 import boto3
 from dotenv import load_dotenv
 import os
+# import psycopg2-binary
+from flask_sqlalchemy import SQLAlchemy
+from models import db, connect_db
+
 
 app = Flask(__name__)
-# CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"])
-CORS(app)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    "DATABASE_URL", "postgresql:///pixly")
+
+CORS(app)
 
 load_dotenv()
 
@@ -24,13 +30,22 @@ s3= boto3.resource(
 )
 
 ##############################################################################
+connect_db(app)
+
+
 
 @app.post('/add')
 def store_img():
     print("Hello add route is being hit")
     print(request)
     file = request.files["file"]
+    print("FILENAME>>>>", file.name)
+
     print("\n\n\n\n*******",file)
+    print("request.form>>>>", request.form)
+    make = request.form['make']
+    print("make>>>>", make)
+
     s3.Bucket(BUCKET).put_object(Key='test.jpg', Body=file)
     return jsonify({"success": True})
 
