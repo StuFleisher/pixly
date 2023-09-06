@@ -42,11 +42,15 @@ def store_img():
     print("FILENAME>>>>", file.name)
 
     print("\n\n\n\n*******",file)
+<<<<<<< HEAD
     print("request.form>>>>", request.form)
     make = request.form['make']
     print("make>>>>", make)
 
     s3.Bucket(BUCKET).put_object(Key='test.jpg', Body=file)
+=======
+    s3.Bucket(BUCKET).put_object(Key=file.filename, Body=file)
+>>>>>>> a03f7290f23654e314090f39f8d701a14a0b4629
     return jsonify({"success": True})
 
 
