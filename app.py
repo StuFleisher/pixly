@@ -31,7 +31,7 @@ def store_img():
     print(request)
     file = request.files["file"]
     print("\n\n\n\n*******",file)
-    s3.Bucket(BUCKET).put_object(Key='test.jpg', Body=file)
+    s3.Bucket(BUCKET).put_object(Key=file.filename, Body=file)
     return jsonify({"success": True})
 
 
