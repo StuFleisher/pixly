@@ -64,5 +64,11 @@ def get_image_by_id(id):
     else:
         return jsonify({"message":"Image is not found"})
 
+@app.get('/images')
+def get_all_images():
+    images = Image.query.all()
+    serialized_images = [image.serialized() for image in images]
+    return jsonify({"images":serialized_images})
+
 
 
