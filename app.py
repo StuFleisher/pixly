@@ -42,12 +42,12 @@ def store_img():
 
     new_image = Image(
     id = request.form['id'],
-    make = request.form['make'],
-    model = request.form['model'],
-    date = request.form['date'],
-    file_name = file.name,
-    pixel_x_dimension = request.form['pixelXDimension'],
-    pixel_y_dimension = request.form['pixelYDimension'],
+    make = request.form.get('make'),
+    model = request.form.get('model') ,
+    date = request.form.get('date'),
+    file_name = request.form.get("file_name"),
+    pixel_x_dimension = request.form.get('pixelXDimension'),
+    pixel_y_dimension = request.form.get('pixelYDimension'),
     url= f'https://{BUCKET}.s3.amazonaws.com/{id}.jpg'
     )
     db.session.add(new_image)
