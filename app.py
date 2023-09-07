@@ -1,13 +1,12 @@
 from flask import Flask, request, jsonify
-# import s3fs
 from flask_cors import CORS
 import boto3
 from dotenv import load_dotenv
 import os
-# import psycopg2-binary
 from flask_sqlalchemy import SQLAlchemy
 from models import db, connect_db
-
+import uuid
+from models import Image
 
 app = Flask(__name__)
 
@@ -32,25 +31,27 @@ s3= boto3.resource(
 ##############################################################################
 connect_db(app)
 
-
-
 @app.post('/add')
 def store_img():
     print("Hello add route is being hit")
     print(request)
     file = request.files["file"]
-    print("FILENAME>>>>", file.name)
 
-    print("\n\n\n\n*******",file)
-<<<<<<< HEAD
-    print("request.form>>>>", request.form)
-    make = request.form['make']
-    print("make>>>>", make)
+    new_image = Image(
+    id = uuid.uuid1(),
+    make = request.form['make'],
+    model = request.form['model'],
+    date = request.form['date'],
+    file_name = file.name,
+    pixel_x_dimension = request.form['pixelXDimension'],
+    pixel_y_dimension = request.form['pixelYDimension']
+    )
+    db.session.add(new_image)
+    db.session.commit()
 
     s3.Bucket(BUCKET).put_object(Key='test.jpg', Body=file)
-=======
     s3.Bucket(BUCKET).put_object(Key=file.filename, Body=file)
->>>>>>> a03f7290f23654e314090f39f8d701a14a0b4629
+
     return jsonify({"success": True})
 
 
