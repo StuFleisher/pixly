@@ -51,7 +51,6 @@ def store_img():
     db.session.add(new_image)
     db.session.commit()
 
-    s3.Bucket(BUCKET).put_object(Key='test.jpg', Body=file)
     s3.Bucket(BUCKET).put_object(Key=f'{unique_id}.jpg', Body=file)
 
     return jsonify({"success": True})
