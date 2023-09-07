@@ -9,6 +9,7 @@ CREATE TABLE images (
     pixel_x_dimension INTEGER,
     pixel_y_dimension INTEGER,
     make TEXT,
-    model TEXT
+    model TEXT,
+    url TEXT
 );
 
