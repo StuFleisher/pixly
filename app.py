@@ -36,26 +36,28 @@ def store_img():
     print("Hello add route is being hit")
     print(request)
     file = request.files["file"]
-    # unique_id = uuid.uuid1().hex
+    unique_id = uuid.uuid1().hex
     # print("ID>>>>>>",unique_id)
     print(request.form)
 
     new_image = Image(
-    id = request.form['id'],
+    id = unique_id, #request.form['id'],
     make = request.form.get('make'),
     model = request.form.get('model') ,
     date = request.form.get('date'),
     file_name = request.form.get("file_name"),
     pixel_x_dimension = request.form.get('pixelXDimension'),
     pixel_y_dimension = request.form.get('pixelYDimension'),
-    url= f'https://{BUCKET}.s3.amazonaws.com/{id}.jpg'
+    url= f'https://{BUCKET}.s3.amazonaws.com/{unique_id}.jpg'
     )
     db.session.add(new_image)
     db.session.commit()
 
-    s3.Bucket(BUCKET).put_object(Key=f'{id}.jpg', Body=file)
+    s3.Bucket(BUCKET).put_object(Key=f'{unique_id}.jpg', Body=file)
 
-    return jsonify({"success": True})
+    return jsonify({"image": new_image.serialized()})
+
+
 
 @app.get('/image/<id>')
 def get_image_by_id(id):
@@ -64,6 +66,19 @@ def get_image_by_id(id):
         return jsonify(image.serialized())
     else:
         return jsonify({"message":"Image is not found"})
+
+
+
+@app.patch('/image/<id>/edit')
+def update_image(id):
+    # allows for updating of the image only
+    
+    file = request.files["file"]
+    image = Image.query.get(id)
+    s3.Bucket(BUCKET).put_object(Key=f'{image.id}.jpg', Body=file)
+
+    return jsonify({"image": image.serialized()})
+
 
 @app.get('/images')
 def get_all_images():
