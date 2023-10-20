@@ -37,7 +37,6 @@ def store_img():
     print(request)
     file = request.files["file"]
     unique_id = uuid.uuid1().hex
-    # print("ID>>>>>>",unique_id)
     print(request.form)
 
     new_image = Image(
