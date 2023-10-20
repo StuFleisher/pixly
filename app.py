@@ -72,7 +72,7 @@ def get_image_by_id(id):
 @app.patch('/image/<id>/edit')
 def update_image(id):
     # allows for updating of the image only
-    
+
     file = request.files["file"]
     image = Image.query.get(id)
     s3.Bucket(BUCKET).put_object(Key=f'{image.id}.jpg', Body=file)
